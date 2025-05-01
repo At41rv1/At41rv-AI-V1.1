@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>At41rv AI V1.1</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <h2>At41rv AI V1.1</h2>
+
+    {% if user_info %}
+        <p>Welcome, {{ user_info.name }} (<a href="{{ url_for('logout') }}">Logout</a>)</p>
+    {% endif %}
+
+    <div style="max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px;">
+        <div id="chat-box" style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; background: #f9f9f9;">
+            {% for item in session.get('chat_history', []) %}
+                <div style="margin-bottom: 15px;">
+                    <strong>You:</strong>
+                    <div style="background: #e0e0e0; padding: 10px; border-radius: 5px;">{{ item.question }}</div>
+                    <strong>At41rv:</strong>
+                    <div style="background: #d2eaff; padding: 10px; border-radius: 5px;">{{ item.answer }}</div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <form method="POST" action="{{ url_for('ask_question') }}">
+            <textarea name="question" rows="3" style="width: 100%; margin-top: 10px;" placeholder="Type your message here..."></textarea><br>
+            <button type="submit" style="margin-top: 10px;">Submit</button>
+        </form>
+
+        {% if session.get("questions_asked", 0) >= 2 and not user_info %}
+            <div style="margin-top: 20px; padding: 10px; background: #fff3cd; border: 1px solid #ffeeba;">
+                <strong>Notice:</strong> You've reached the limit of 2 free questions.<br>
+                <a href="{{ url_for('google.login') }}">Login with Google</a> to continue.
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
