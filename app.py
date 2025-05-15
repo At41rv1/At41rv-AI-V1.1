@@ -1,5 +1,4 @@
-from flask import Flask, request, redirect, session, url_for, send_file
-from flask import render_template_string
+from flask import Flask, request, redirect, session, url_for, send_file, render_template_string
 from datetime import datetime
 import google.generativeai as genai
 import os
@@ -11,7 +10,7 @@ app.secret_key = "uper_secret_key_1234ssssssssssssssssssssssssssssssssssssssss23
 genai.configure(api_key="AIzaSyBkU7C6lEDhQ_gqE-730xCWTXjKTuN-qPI")
 model = genai.GenerativeModel("gemini-2.0-flash")
 
-# === Load index.html from root folder ===
+# === Serve index.html from root ===
 @app.route('/')
 def index():
     with open("index.html", "r", encoding="utf-8") as f:
@@ -23,7 +22,7 @@ def index():
 def serve_bg():
     return send_file("bgfinal.jpeg", mimetype='image/jpeg')
 
-# === Process question ===
+# === Process question and store chat in session ===
 @app.route('/ask', methods=['POST'])
 def ask_question():
     question = request.form.get("question", "").strip()
