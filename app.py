@@ -1,28 +1,26 @@
-from flask import Flask, request, redirect, session, url_for, send_file, render_template_string
-from datetime import datetime
+from flask import Flask, request, redirect, session, url_for, render_template_string, send_file
 import google.generativeai as genai
-import os
 
 app = Flask(__name__)
 app.secret_key = "uper_secret_key_1234ssssssssssssssssssssssssssssssssssssssss2345"
 
-# === Configure Gemini API ===
+# Configure Gemini API
 genai.configure(api_key="AIzaSyBkU7C6lEDhQ_gqE-730xCWTXjKTuN-qPI")
 model = genai.GenerativeModel("gemini-2.0-flash")
 
-# === Serve index.html from root ===
+# Load index.html from root and render with chat history
 @app.route('/')
 def index():
     with open("index.html", "r", encoding="utf-8") as f:
         html = f.read()
     return render_template_string(html, session=session)
 
-# === Serve background image from root ===
+# Serve background image from root
 @app.route('/bgfinal.jpeg')
 def serve_bg():
     return send_file("bgfinal.jpeg", mimetype='image/jpeg')
 
-# === Process question and store chat in session ===
+# Process user question
 @app.route('/ask', methods=['POST'])
 def ask_question():
     question = request.form.get("question", "").strip()
